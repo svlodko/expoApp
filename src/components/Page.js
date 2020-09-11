@@ -57,6 +57,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    input: {
+        height: 20,
+        borderColor: 'gray',
+        borderWidth: 1
     }
 });
 
