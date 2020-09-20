@@ -1,52 +1,49 @@
-import {StyleSheet, Button, View, Vibration, Text, TextInput} from 'react-native';
-import React, {useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {setDecrementCount, setIncrementCount, setInputText} from "../reducer/reducer";
+import {StyleSheet, View, Image, Text, Vibration, TextInput, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect, useReducer} from 'react';
+import reducer from "../reducer/reducer";
 
 const Page = () => {
 
-    const dispatch = useDispatch()
-    const count = useSelector(state => state.count)
-    const text = useSelector(state => state.text)
+    const [state, dispatch] = useReducer(reducer, localStorage.getItem('text'))
+    const [inputText, setInputText] = useState()
 
-    function onCountIncrement() {
-        dispatch(setIncrementCount(count + 2))
-    }
+    useEffect(() => {
+        localStorage.setItem('text', state)
+    }, [state])
 
-    function onCountDecrement() {
-        dispatch(setDecrementCount(count - 2))
-    }
-
-    function onTextChange() {
-        dispatch(setInputText(event.target.value))
+    const addTitleToText = () => {
+        if (inputText !== '') {
+            dispatch({
+                type: 'ADD',
+                payload: inputText
+            })
+            setInputText('')
+            Vibration.vibrate()
+        }
     }
 
     return (
         <View style={styles.container}>
-            <View>
-                <Button
-                    onPress={() => (onCountIncrement(), Vibration.vibrate())}
-                    title="Increment"
-                />
-            </View>
-            <View>
-                <Button
-                    onPress={() => onCountDecrement()}
-                    title="Decrement"
-                />
-            </View>
-            <Text>COUNTER {count}</Text>
-            <View>
-                <Text>{text}</Text>
-            </View>
+            <Image
+                source={{
+                    uri: 'https://media.alienwarearena.com/media/lua.png',
+                }}
+                style={{width: "100%", height: 250, marginTop: 40, marginBottom: 50}}
+                resizeMode='contain'
+            />
+
+            <Text style={styles.text}>Input your text:</Text>
+
             <TextInput
                 style={styles.input}
-                onChangeText={() => onTextChange()}
-            />
-            {/*<Button*/}
-            {/*    title='Tap to Save'*/}
-            {/*    onPress={() => onTextChange()}*/}
-            {/*/>*/}
+                onChange={e => setInputText(e.target.value)}
+                value={inputText}
+            >
+            </TextInput>
+            <TouchableOpacity style={styles.button} onPress={addTitleToText}>
+                <Text style={{color: 'white'}}>Change text</Text>
+            </TouchableOpacity>
+            <Text style={styles.storageText}>Actual text is: {state}</Text>
         </View>
     );
 }
@@ -56,12 +53,39 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
     },
     input: {
-        height: 20,
-        borderColor: 'gray',
-        borderWidth: 1
+        borderWidth: 1,
+        borderColor: "#575DD9",
+        alignSelf: 'stretch',
+        margin: 32,
+        height: 64,
+        borderRadius: 6,
+        paddingHorizontal: 1,
+        fontSize: 24
+    },
+    button: {
+        backgroundColor: "#575DD9",
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'stretch',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        marginTop: 32,
+        marginHorizontal: 32,
+        borderRadius: 6
+    },
+    text: {
+        color: 'black',
+        fontSize: 24,
+        fontWeight: '300'
+    },
+    storageText:{
+        color: 'black',
+        fontSize: 24,
+        fontWeight: '300',
+        marginTop: 32,
+
     }
 });
 

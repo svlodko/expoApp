@@ -8,13 +8,11 @@ import Page from "./src/components/Page";
 const App = () => {
 
     return (
-        <Provider store={store}>
             <View>
                 <View style={styles.container}>
                 </View>
                 <Page/>
             </View>
-        </Provider>
     );
 }
 
